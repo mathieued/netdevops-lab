@@ -2,7 +2,7 @@ services:
 
   ansible:
     image: docker.io/mathieued/ansible_base
-    command: ansible --version
+    command: tail -F stayawake
     volumes:
       - ./ansible:/var/ansible:rw
 
@@ -31,6 +31,9 @@ services:
   airflow:
     image: docker.io/bitnami/airflow:2
     env_file: env/airflow_websrv.env
+    volumes:
+      - ./airflow/dags:/opt/bitnami/airflow/dags
+      - airflow_logs:/opt/bitnami/airflow/logs
     ports:
       - '8080:8080'
 
@@ -55,4 +58,6 @@ volumes:
   ansible_inventories:
     driver: local
   semaphore_db:
+    driver: local
+  airflow_logs:
     driver: local
