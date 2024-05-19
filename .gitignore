@@ -1,0 +1,2 @@
+semaphore/database/*
+!semaphore/database/.gitkeep
