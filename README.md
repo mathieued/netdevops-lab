@@ -51,7 +51,7 @@ See `ansible_base/Dockerfile` for more details.
 
 ### Airflow
 
-Airflow is used here as an advanced scheduler. It implements DAGs to create workflows. COmes handy for scheduled tasks that I need to execute regularly.
+Apache Airflow is used here as an advanced scheduler. It implements DAGs to create workflows. COmes handy for scheduled tasks that I need to execute regularly.
 
 Airflow needs :
 * a webserver to host the UI
@@ -60,6 +60,10 @@ Airflow needs :
 
 That's why you'll see 3 containers regarding Airflow.
 
+Airflow will be accessible from this URL : `http://localhost:8080`
+
 ### Semaphore UI
 
 Semaphore is an UI that allows you to ease running of ansible playbooks. It is a light and open-source alternative to Ansible Tower. However, it isn't such advanced as Tower or AWX.
+
+Semaphore will be accessible from this URL : `http://localhost:3000`
