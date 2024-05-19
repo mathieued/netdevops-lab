@@ -1,0 +1,76 @@
+#version: '2'
+
+services:
+  ansible:
+    image: docker.io/mathieued/ansible_base:v0
+    volumes: 
+      - 'ansible_playbooks:/ansible/playbooks/'
+      - 'ansible_inventories:/ansible/inventories/'
+  postgresql:
+    image: docker.io/bitnami/postgresql:16
+    volumes:
+      - 'postgresql_data:/bitnami/postgresql'
+    environment:
+      - POSTGRESQL_DATABASE=bitnami_airflow
+      - POSTGRESQL_USERNAME=bn_airflow
+      - POSTGRESQL_PASSWORD=${AIRFLOW_DB_PASSWORD}
+  redis:
+    image: docker.io/bitnami/redis:7.0
+    volumes:
+      - 'redis_data:/bitnami'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+  airflow-scheduler:
+    image: docker.io/bitnami/airflow-scheduler:2
+    environment:
+      - AIRFLOW_DATABASE_NAME=bitnami_airflow
+      - AIRFLOW_DATABASE_USERNAME=bn_airflow
+      - AIRFLOW_DATABASE_PASSWORD=${AIRFLOW_DB_PASSWORD}
+      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_WEBSERVER_HOST=airflow
+  airflow-worker:
+    image: docker.io/bitnami/airflow-worker:2
+    environment:
+      - AIRFLOW_DATABASE_NAME=bitnami_airflow
+      - AIRFLOW_DATABASE_USERNAME=bn_airflow
+      - AIRFLOW_DATABASE_PASSWORD=${AIRFLOW_DB_PASSWORD}
+      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_WEBSERVER_HOST=airflow
+  airflow:
+    image: docker.io/bitnami/airflow:2
+    environment:
+      - AIRFLOW_DATABASE_NAME=bitnami_airflow
+      - AIRFLOW_DATABASE_USERNAME=bn_airflow
+      - AIRFLOW_DATABASE_PASSWORD=${AIRFLOW_DB_PASSWORD}
+      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_PASSWORD=password
+      - AIRFLOW_USERNAME=admin
+      - AIRFLOW_EMAIL=mat.edouard@gmail.com
+    ports:
+      - '8080:8080'
+  semaphore:
+    ports:
+      - 3000:3000
+    image: docker.io/semaphoreui/semaphore:latest
+    volumes:
+      # - '${PWD}/semaphore/config.json:/etc/semaphore/config.json'
+      - 'semaphore_db:/var/lib/semaphore'
+    environment:
+      SEMAPHORE_DB_DIALECT: bolt
+      SEMAPHORE_ADMIN_PASSWORD: ${SEMAPHORE_ADMIN_PASSWORD}
+      SEMAPHORE_ADMIN_NAME: admin
+      SEMAPHORE_ADMIN_EMAIL: admin@localhost
+      SEMAPHORE_ADMIN: admin
+      TZ: Europe/Paris
+volumes:
+  postgresql_data:
+    driver: local
+  redis_data:
+    driver: local
+  ansible_playbooks:
+    driver: local
+  ansible_inventories:
+    driver: local
+  semaphore_db:
+    driver: local

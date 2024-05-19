@@ -57,6 +57,8 @@ jobs:
         with:
           context: ansible_base/
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.DOCKER_HUB_USERNAME }}/ansible_base:${{ steps.date.outputs.date }}
+          tags: 
+            - ${{ env.DOCKER_HUB_USERNAME }}/ansible_base:${{ steps.date.outputs.date }}
+            ${{ env.DOCKER_HUB_USERNAME }}/ansible_base:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
