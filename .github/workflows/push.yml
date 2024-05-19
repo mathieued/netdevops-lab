@@ -12,8 +12,6 @@ on:
 env:
   REGISTRY: docker.io
   DOCKER_HUB_USERNAME: mathieued
-  IMAGE_NAME:
-    ANSIBLE_BASE: ansible_base
 
 
 jobs:
@@ -55,6 +53,6 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME.ANSIBLE_BASE }}:$(date +%s)
+          tags: ${{ env.DOCKER_HUB_USERNAME }}/ansible_base:$(date +%s)
           cache-from: type=gha
           cache-to: type=gha,mode=max
